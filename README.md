@@ -140,4 +140,16 @@ go test -run=^$ -bench=.
 
 If your curious, check out this commit that shows benchmarks that compare a few 
 different ways of implementing a snowflake generator in Go.
-*  https://github.com/shuguocloud/snowflake/tree/9befef8908df13f4102ed21f42b083dd862b5036
+
+### Reference
+
+#### snowflake
+[https://github.com/bwmarrin/snowflake](https://github.com/bwmarrin/snowflake)
+[https://github.com/GUAIK-ORG/go-snowflake](https://github.com/GUAIK-ORG/go-snowflake)
+[https://github.com/holdno/snowFlakeByGo](https://github.com/holdno/snowFlakeByGo)
+[https://github.com/zheng-ji/goSnowFlake](https://github.com/zheng-ji/goSnowFlake)
+[https://github.com/savaki/snowflake](https://github.com/savaki/snowflake)
+
+#### snowflake based on etcd
+[https://github.com/gonet2/snowflake](https://github.com/gonet2/snowflake)
+[https://github.com/bobohume/gonet](https://github.com/bobohume/gonet)

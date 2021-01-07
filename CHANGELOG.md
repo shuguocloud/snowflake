@@ -26,3 +26,7 @@
    --- PASS: TestPrintAll (0.00s)
    PASS
    ok      github.com/shuguocloud/snowflake        0.031s
+
+3. 测试 bench
+
+go test -test.bench=".*" -count=5

@@ -3,7 +3,9 @@ package snowflake
 import (
 	"bytes"
 	"reflect"
+	"sync"
 	"testing"
+	"time"
 )
 
 //******************************************************************************
@@ -80,6 +82,73 @@ func TestPrintAll(t *testing.T) {
 	t.Logf("Bytes    : %#v", id.Bytes())
 	t.Logf("IntBytes : %#v", id.IntBytes())
 
+}
+
+func TestPrintRawMany(t *testing.T) {
+	node, err := NewNode(0)
+	if err != nil {
+		t.Fatalf("error creating NewNode, %s", err)
+	}
+
+	t1 := time.Now()
+	for i := 0; i < 200000; i++ {
+		id := node.Generate()
+
+		t.Logf("Int64    : %#v", id.Int64())
+		/*t.Logf("String   : %#v", id.String())
+		t.Logf("Base2    : %#v", id.Base2())
+		t.Logf("Base32   : %#v", id.Base32())
+		t.Logf("Base36   : %#v", id.Base36())
+		t.Logf("Base58   : %#v", id.Base58())
+		t.Logf("Base64   : %#v", id.Base64())
+		t.Logf("Bytes    : %#v", id.Bytes())
+		t.Logf("IntBytes : %#v", id.IntBytes())*/
+	}
+
+	elapsed := time.Since(t1)
+	t.Logf("generate 20k ids elapsed: %v", elapsed)
+}
+
+func TestPrintMany(t *testing.T) {
+	var wg sync.WaitGroup
+	node, err := NewNode(0)
+	if err != nil {
+		t.Fatalf("error creating NewNode, %s", err)
+	}
+
+	var check sync.Map
+	t1 := time.Now()
+	for i := 0; i < 200000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			id := node.Generate()
+			val := id.Int64()
+
+			t.Logf("Int64    : %#v", id.Int64())
+			t.Logf("String   : %#v", id.String())
+			t.Logf("Base2    : %#v", id.Base2())
+			t.Logf("Base32   : %#v", id.Base32())
+			t.Logf("Base36   : %#v", id.Base36())
+			t.Logf("Base58   : %#v", id.Base58())
+			t.Logf("Base64   : %#v", id.Base64())
+			t.Logf("Bytes    : %#v", id.Bytes())
+			t.Logf("IntBytes : %#v", id.IntBytes())
+
+			if _, ok := check.Load(val); ok {
+				// id冲突检查
+				t.Logf("error#unique: val:%v", val)
+			}
+			check.Store(val, 0)
+			if val == 0 {
+				t.Logf("error")
+			}
+		}()
+		wg.Wait()
+		elapsed := time.Since(t1)
+		t.Logf("generate 20k ids elapsed: %v", elapsed)
+	}
 }
 
 func TestInt64(t *testing.T) {
